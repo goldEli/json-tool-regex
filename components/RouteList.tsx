@@ -50,10 +50,11 @@ const RouteList: React.FC<RouteListProps> = ({ routes, onRoutesChange }) => {
             No routes found. Click &quot;Add New Route&quot; to get started.
           </div>
         ) : (
-          routes.map((route) => (
+          routes.map((route, index) => (
             <RouteForm
               key={route.id}
               route={route}
+              index={index + 1}
               onRouteChange={handleRouteChange}
               onDeleteRoute={handleDeleteRoute}
             />

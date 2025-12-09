@@ -1,20 +1,5 @@
 [
   {
-    "path": "/seo-sitemap/",
-    "usage": "sitemap resource path",
-    "project": "weex-web-prod",
-    "priority": 13,
-    "rule": [
-      "^/seo-sitemap/",
-      "^/seo-sitemap/2023/01/01/"
-    ],
-    "testCases": [
-      "/seo-sitemap/index.xml",
-      "/seo-sitemp/2023/01/01/index.xml"
-    ],
-    "id": "0-esp1v"
-  },
-  {
     "path": "/ja/media",
     "usage": "ops config",
     "project": "weex-logging-wordpress",
@@ -25,6 +10,21 @@
     "testCases": [
       "/ja/media/2023/01/01/index.xml"
     ],
-    "id": "1-ouwcs"
+    "id": "1-0qrfw"
+  },
+  {
+    "path": "/seo-sitemap/",
+    "usage": "sitemap resource path",
+    "project": "weex-web-prod",
+    "priority": 13,
+    "rule": [
+      "^/seo-sitemap/",
+      "^/seo-sitemap/2023/01/01/"
+    ],
+    "testCases": [
+      "/seo-sitemap/index.xml",
+      "/seo-sitemap/2023/01/01/index.xml"
+    ],
+    "id": "0-vhncz"
   }
 ]

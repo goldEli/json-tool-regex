@@ -37,12 +37,15 @@ export default function Home() {
     setSaving(true);
 
     try {
+      // Sort routes by priority before sending to API (ascending order)
+      const sortedRoutes = [...routes].sort((a, b) => a.priority - b.priority);
+
       const response = await fetch('/api/routes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(routes),
+        body: JSON.stringify(sortedRoutes),
       });
 
       if (!response.ok) {

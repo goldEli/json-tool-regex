@@ -8,9 +8,10 @@ interface RouteFormProps {
   route: RouteWithId;
   onRouteChange: (route: RouteWithId) => void;
   onDeleteRoute: (id: string) => void;
+  index: number;
 }
 
-const RouteForm: React.FC<RouteFormProps> = ({ route, onRouteChange, onDeleteRoute }) => {
+const RouteForm: React.FC<RouteFormProps> = ({ route, onRouteChange, onDeleteRoute, index }) => {
   const handleChange = (field: keyof Omit<RouteWithId, 'id' | 'rule' | 'testCases'>, value: string | number) => {
     onRouteChange({
       ...route,
@@ -35,7 +36,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ route, onRouteChange, onDeleteRou
   return (
     <div className="p-4 border rounded-lg mb-4 bg-card">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-lg font-semibold">Route Configuration</h3>
+        <h3 className="text-lg font-semibold">Route {index} Configuration</h3>
         <Button
           type="button"
           variant="destructive"
