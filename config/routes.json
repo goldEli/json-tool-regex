@@ -9,8 +9,7 @@
     ],
     "testCases": [
       "/ja/media/2023/01/01/index.xml"
-    ],
-    "id": "0-rwns0"
+    ]
   },
   {
     "path": "/seo-sitemap/",
@@ -24,7 +23,6 @@
     "testCases": [
       "/seo-sitemap/index.xml",
       "/seo-sitemap/2023/01/01/index.xml"
-    ],
-    "id": "1-733cm"
+    ]
   }
 ]

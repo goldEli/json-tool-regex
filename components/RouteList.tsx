@@ -1,8 +1,6 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { RouteWithId } from '@/types/routes';
 import RouteForm from './RouteForm';
-import { generateId } from '@/lib/routes';
 
 interface RouteListProps {
   routes: RouteWithId[];
@@ -10,19 +8,6 @@ interface RouteListProps {
 }
 
 const RouteList: React.FC<RouteListProps> = ({ routes, onRoutesChange }) => {
-  const handleAddRoute = () => {
-    const newRoute: RouteWithId = {
-      id: generateId(),
-      path: '',
-      usage: '',
-      project: '',
-      priority: 1,
-      rule: [''],
-      testCases: [''],
-    };
-    onRoutesChange([...routes, newRoute]);
-  };
-
   const handleRouteChange = (updatedRoute: RouteWithId) => {
     const newRoutes = routes.map((route) =>
       route.id === updatedRoute.id ? updatedRoute : route
@@ -37,12 +22,7 @@ const RouteList: React.FC<RouteListProps> = ({ routes, onRoutesChange }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Routes Configuration</h2>
-        <Button type="button" onClick={handleAddRoute}>
-          Add New Route
-        </Button>
-      </div>
+      <h2 className="text-2xl font-bold">Routes Configuration</h2>
 
       <div className="space-y-4">
         {routes.length === 0 ? (

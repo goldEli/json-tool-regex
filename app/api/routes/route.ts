@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
     }
     
     // Remove IDs from routes before validation and writing
-    const routesWithoutIds = body.map(({ ...route }) => route) as Routes;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const routesWithoutIds = body.map(({ id: _, ...route }) => route) as Routes;
     
     // Validate each route with detailed error messages
     const { isValid, errors } = validateRoutesWithErrors(routesWithoutIds);

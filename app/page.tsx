@@ -47,6 +47,20 @@ export default function Home() {
     fetchRoutes();
   }, []);
 
+  // Handle adding new route
+  const handleAddRoute = () => {
+    const newRoute: RouteWithId = {
+      id: Math.random().toString(36).substr(2, 9),
+      path: '',
+      usage: '',
+      project: '',
+      priority: 1,
+      rule: [''],
+      testCases: [''],
+    };
+    setRoutes([...routes, newRoute]);
+  };
+
   // Handle saving routes
   const handleSave = async () => {
     setSaving(true);
@@ -122,7 +136,7 @@ export default function Home() {
     <div className="min-h-screen bg-black p-4 md:p-8 font-sans">
       <main className="max-w-6xl mx-auto">
         <div className="space-y-6">
-          {/* Header and Save Button */}
+          {/* Header and Buttons */}
           <div className="sticky top-0 z-10 bg-black flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4">
             <div>
               <h1 className="text-3xl font-bold text-white">
@@ -132,14 +146,23 @@ export default function Home() {
                 Manage and edit your routes configuration
               </p>
             </div>
-            <Button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="w-full sm:w-auto"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                type="button"
+                onClick={handleAddRoute}
+                className="w-full sm:w-auto"
+              >
+                Add New Route
+              </Button>
+              <Button
+                type="button"
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full sm:w-auto"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
           </div>
 
           {/* Route List */}
