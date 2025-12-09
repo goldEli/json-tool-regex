@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Routes } from '@/types/routes';
-import { addIdsToRoutes, validateRoutes } from '@/lib/routes';
+import { addIdsToRoutes, validateRoutesWithErrors } from '@/lib/routes';
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 
@@ -50,9 +50,10 @@ export async function POST(req: NextRequest) {
     // Remove IDs from routes before validation and writing
     const routesWithoutIds = body.map(({ ...route }) => route) as Routes;
     
-    // Validate each route
-    if (!validateRoutes(routesWithoutIds)) {
-      return NextResponse.json({ error: 'Invalid route data' }, { status: 400 });
+    // Validate each route with detailed error messages
+    const { isValid, errors } = validateRoutesWithErrors(routesWithoutIds);
+    if (!isValid) {
+      return NextResponse.json({ error: 'Validation failed', errors }, { status: 400 });
     }
     
     // Write the routes to the file

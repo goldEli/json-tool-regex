@@ -4,13 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RouteWithId } from '@/types/routes';
 import RouteList from '@/components/RouteList';
+import { toast } from 'sonner';
 
 export default function Home() {
   const [routes, setRoutes] = useState<RouteWithId[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   // Fetch routes from API on initial load
   useEffect(() => {
@@ -23,7 +22,7 @@ export default function Home() {
         const data = await response.json();
         setRoutes(data);
       } catch (err) {
-        setError('Failed to load routes. Please try again.');
+        toast.error('Failed to load routes. Please try again.');
         console.error(err);
       } finally {
         setLoading(false);
@@ -36,8 +35,6 @@ export default function Home() {
   // Handle saving routes
   const handleSave = async () => {
     setSaving(true);
-    setError(null);
-    setSuccess(null);
 
     try {
       const response = await fetch('/api/routes', {
@@ -50,17 +47,22 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          // Show detailed validation errors
+          errorData.errors.forEach((error: string) => {
+            toast.error(error);
+          });
+        } else {
+          // Show general error
+          toast.error(errorData.error || 'Failed to save routes');
+        }
+        
         throw new Error(errorData.error || 'Failed to save routes');
       }
 
-      setSuccess('Routes saved successfully!');
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccess(null);
-      }, 3000);
+      toast.success('Routes saved successfully!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save routes. Please try again.');
       console.error(err);
     } finally {
       setSaving(false);
@@ -99,20 +101,6 @@ export default function Home() {
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </Button>
-          </div>
-
-          {/* Status Messages */}
-          <div className="space-y-2">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
-                {success}
-              </div>
-            )}
           </div>
 
           {/* Route List */}
