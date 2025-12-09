@@ -4,13 +4,24 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RouteWithId } from '@/types/routes';
 import RouteList from '@/components/RouteList';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function Home() {
   const [routes, setRoutes] = useState<RouteWithId[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Fetch routes from API on initial load
   useEffect(() => {
@@ -23,7 +34,10 @@ export default function Home() {
         const data = await response.json();
         setRoutes(data);
       } catch (err) {
-        setErrorMessages(['Failed to load routes. Please try again.']);
+        setModalTitle('Error');
+        setModalDescription('Failed to load routes. Please try again.');
+        setIsSuccess(false);
+        setShowModal(true);
         console.error(err);
       } finally {
         setLoading(false);
@@ -36,8 +50,6 @@ export default function Home() {
   // Handle saving routes
   const handleSave = async () => {
     setSaving(true);
-    setErrorMessages([]);
-    setShowSuccess(false);
 
     try {
       // Sort routes by priority before sending to API (ascending order)
@@ -53,6 +65,8 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        
+        let errorDescription = 'Failed to save routes';
         
         if (errorData.errors && Array.isArray(errorData.errors)) {
           // Map error indices to match the UI display (not sorted order)
@@ -70,16 +84,23 @@ export default function Home() {
               return match;
             });
           });
-          setErrorMessages(displayErrorMessages);
-        } else {
-          // Show general error
-          setErrorMessages([errorData.error || 'Failed to save routes']);
+          errorDescription = displayErrorMessages.join('\n');
+        } else if (errorData.error) {
+          errorDescription = errorData.error;
         }
         
-        throw new Error(errorData.error || 'Failed to save routes');
+        setModalTitle('Error');
+        setModalDescription(errorDescription);
+        setIsSuccess(false);
+        setShowModal(true);
+        
+        throw new Error(errorDescription);
       }
 
-      setShowSuccess(true);
+      setModalTitle('Success');
+      setModalDescription('Routes saved successfully!');
+      setIsSuccess(true);
+      setShowModal(true);
     } catch (err) {
       console.error(err);
     } finally {
@@ -121,28 +142,29 @@ export default function Home() {
             </Button>
           </div>
 
-          {/* Status Messages */}
-          {showSuccess && (
-            <div className="bg-green-500/10 border border-green-500 text-green-400 px-4 py-3 rounded-md">
-              Routes saved successfully!
-            </div>
-          )}
-
-          {errorMessages.length > 0 && (
-            <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-md">
-              <h3 className="font-medium mb-2">Validation Errors:</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {errorMessages.map((error, index) => (
-                  <li key={index}>{error}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* Route List */}
           <div className="bg-gray-900 rounded-lg shadow-sm border p-6">
             <RouteList routes={routes} onRoutesChange={setRoutes} />
           </div>
+
+          {/* Centered Modal for Success/Error Messages */}
+          <AlertDialog open={showModal} onOpenChange={setShowModal}>
+            <AlertDialogContent className={isSuccess ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10"}>
+              <AlertDialogHeader>
+                <AlertDialogTitle className={isSuccess ? "text-green-400" : "text-red-400"}>
+                  {modalTitle}
+                </AlertDialogTitle>
+                <AlertDialogDescription className={isSuccess ? "text-green-300" : "text-red-300"}>
+                  {modalDescription}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setShowModal(false)}>
+                  OK
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </main>
     </div>
