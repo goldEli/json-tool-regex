@@ -69,6 +69,7 @@ export const validateRoute = (route: Route): { isValid: boolean; errors: string[
       for (const rule of route.rule) {
         try {
           const regex = new RegExp(rule);
+          console.log(`Testing testCase result: "${testCase}" against rule: "${rule}", result: ${regex.test(testCase)}`);
           if (regex.test(testCase)) {
             matches = true;
             break;
