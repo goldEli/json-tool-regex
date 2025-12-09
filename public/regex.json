@@ -1,0 +1,29 @@
+[
+  {
+    "path": "/seo-sitemap/",
+    "usage": "sitemap resource path",
+    "project": "weex-web-prod",
+    "priority": 1,
+    "rule": ["^/seo-sitemap/", "^/seo-sitemap/2023/01/01/"],
+    "testCases": [
+      "/seo-sitemap/index.xml",
+      "/seo-sitemap/2023/01/01/index.xml"
+    ]
+  },
+  {
+    "path": "/ja/media",
+    "usage": "ops config",
+    "project": "weex-logging-wordpress",
+    "priority": 2,
+    "rule": ["/ja/media*"],
+    "testCases": [
+      "/ja/media/2023/01/01/index.xml"
+    ]
+  }
+]
+
+
+
+
+
+
