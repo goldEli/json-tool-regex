@@ -71,7 +71,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <p className="text-lg text-muted-foreground">Loading routes...</p>
         </div>
@@ -80,13 +80,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-black p-4 md:p-8 font-sans">
       <main className="max-w-6xl mx-auto">
         <div className="space-y-6">
           {/* Header and Save Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-black dark:text-white">
+              <h1 className="text-3xl font-bold text-white">
                 JSON Routes Config Editor
               </h1>
               <p className="text-muted-foreground mt-1">
@@ -104,7 +104,7 @@ export default function Home() {
           </div>
 
           {/* Route List */}
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6">
+          <div className="bg-gray-900 rounded-lg shadow-sm border p-6">
             <RouteList routes={routes} onRoutesChange={setRoutes} />
           </div>
         </div>
