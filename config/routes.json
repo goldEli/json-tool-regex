@@ -8,9 +8,9 @@
       "/ja/media*"
     ],
     "testCases": [
-      "/ja/media/2023/01/01/index.xml"
+      "/ja/medi/2023/01/01/index.xml"
     ],
-    "id": "1-0qrfw"
+    "id": "0-ouf2t"
   },
   {
     "path": "/seo-sitemap/",
@@ -25,6 +25,6 @@
       "/seo-sitemap/index.xml",
       "/seo-sitemap/2023/01/01/index.xml"
     ],
-    "id": "0-vhncz"
+    "id": "1-ihy0v"
   }
 ]

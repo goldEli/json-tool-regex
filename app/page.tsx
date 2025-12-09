@@ -4,12 +4,25 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RouteWithId } from '@/types/routes';
 import RouteList from '@/components/RouteList';
-import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export default function Home() {
   const [routes, setRoutes] = useState<RouteWithId[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   // Fetch routes from API on initial load
   useEffect(() => {
@@ -22,7 +35,7 @@ export default function Home() {
         const data = await response.json();
         setRoutes(data);
       } catch (err) {
-        toast.error('Failed to load routes. Please try again.');
+        setErrorMessages(['Failed to load routes. Please try again.']);
         console.error(err);
       } finally {
         setLoading(false);
@@ -35,6 +48,8 @@ export default function Home() {
   // Handle saving routes
   const handleSave = async () => {
     setSaving(true);
+    setErrorMessages([]);
+    setShowSuccess(false);
 
     try {
       // Sort routes by priority before sending to API (ascending order)
@@ -52,23 +67,36 @@ export default function Home() {
         const errorData = await response.json();
         
         if (errorData.errors && Array.isArray(errorData.errors)) {
-          // Show detailed validation errors
-          errorData.errors.forEach((error: string) => {
-            toast.error(error);
+          // Map error indices to match the UI display (not sorted order)
+          const displayErrorMessages = errorData.errors.map((error: string) => {
+            // Extract the route number from the error message and convert to display index
+            return error.replace(/Route (\d+):/, (match, routeNumber) => {
+              // Find the corresponding route in the original list
+              const routeIndex = parseInt(routeNumber) - 1;
+              const originalRoute = sortedRoutes[routeIndex];
+              if (originalRoute) {
+                // Find the index in the original (unsorted) list
+                const displayIndex = routes.findIndex(r => r.id === originalRoute.id) + 1;
+                return `Route ${displayIndex}:`;
+              }
+              return match;
+            });
           });
+          setErrorMessages(displayErrorMessages);
         } else {
           // Show general error
-          toast.error(errorData.error || 'Failed to save routes');
+          setErrorMessages([errorData.error || 'Failed to save routes']);
         }
         
         throw new Error(errorData.error || 'Failed to save routes');
       }
 
-      toast.success('Routes saved successfully!');
+      setShowSuccess(true);
     } catch (err) {
       console.error(err);
     } finally {
       setSaving(false);
+      setShowConfirmDialog(false);
     }
   };
 
@@ -96,15 +124,50 @@ export default function Home() {
                 Manage and edit your routes configuration
               </p>
             </div>
-            <Button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="w-full sm:w-auto"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </Button>
+            <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+              <AlertDialogTrigger asChild>
+                <Button
+                  type="button"
+                  disabled={saving}
+                  className="w-full sm:w-auto"
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Save</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to save these changes? This will overwrite the current routes configuration.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={saving}>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleSave} disabled={saving}>
+                    {saving ? 'Saving...' : 'Confirm Save'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
+
+          {/* Status Messages */}
+          {showSuccess && (
+            <div className="bg-green-500/10 border border-green-500 text-green-400 px-4 py-3 rounded-md">
+              Routes saved successfully!
+            </div>
+          )}
+
+          {errorMessages.length > 0 && (
+            <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-md">
+              <h3 className="font-medium mb-2">Validation Errors:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                {errorMessages.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Route List */}
           <div className="bg-gray-900 rounded-lg shadow-sm border p-6">
