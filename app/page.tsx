@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 export default function Home() {
   const [routes, setRoutes] = useState<RouteWithId[]>([]);
@@ -172,17 +173,20 @@ export default function Home() {
 
           {/* Centered Modal for Success/Error Messages */}
           <AlertDialog open={showModal} onOpenChange={setShowModal}>
-            <AlertDialogContent className={isSuccess ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10"}>
-              <AlertDialogHeader>
-                <AlertDialogTitle className={isSuccess ? "text-green-400" : "text-red-400"}>
+            <AlertDialogContent className={`border-2 ${isSuccess ? "border-green-500 bg-gray-900" : "border-red-500 bg-gray-900"} text-white shadow-lg`}>
+              <AlertDialogHeader className="flex flex-col items-center text-center">
+                <div className={`mb-4 ${isSuccess ? "text-green-500" : "text-red-500"}`}>
+                  {isSuccess ? <CheckCircle size={48} /> : <XCircle size={48} />}
+                </div>
+                <AlertDialogTitle className={`text-2xl font-bold ${isSuccess ? "text-green-400" : "text-red-400"}`}>
                   {modalTitle}
                 </AlertDialogTitle>
-                <AlertDialogDescription className={isSuccess ? "text-green-300" : "text-red-300"}>
+                <AlertDialogDescription className="text-lg text-gray-300 whitespace-pre-line">
                   {modalDescription}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogAction onClick={() => setShowModal(false)}>
+                <AlertDialogAction className={`${isSuccess ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}`} onClick={() => setShowModal(false)}>
                   OK
                 </AlertDialogAction>
               </AlertDialogFooter>

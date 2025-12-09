@@ -18,11 +18,8 @@
     "priority": 13,
     "rule": [
       "^/seo-sitemap/",
-      "^/seo-sitem1ap/2023/01/01/"
+      "^/seo-sitemap/2023/01/01/"
     ],
-    "testCases": [
-      "/seo-sitemap/index.xml",
-      "/seo-sitemap/2023/01/01/index.xml"
-    ]
+    "testCases": []
   }
 ]
