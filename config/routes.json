@@ -10,7 +10,7 @@
     "testCases": [
       "/ja/medi/2023/01/01/index.xml"
     ],
-    "id": "0-ouf2t"
+    "id": "0-i3v2b"
   },
   {
     "path": "/seo-sitemap/",
@@ -19,12 +19,12 @@
     "priority": 13,
     "rule": [
       "^/seo-sitemap/",
-      "^/seo-sitemap/2023/01/01/"
+      "^/seo-sitem1ap/2023/01/01/"
     ],
     "testCases": [
       "/seo-sitemap/index.xml",
       "/seo-sitemap/2023/01/01/index.xml"
     ],
-    "id": "1-ihy0v"
+    "id": "1-4x9uu"
   }
 ]

@@ -4,23 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RouteWithId } from '@/types/routes';
 import RouteList from '@/components/RouteList';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 
 export default function Home() {
   const [routes, setRoutes] = useState<RouteWithId[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -96,7 +84,6 @@ export default function Home() {
       console.error(err);
     } finally {
       setSaving(false);
-      setShowConfirmDialog(false);
     }
   };
 
@@ -115,7 +102,7 @@ export default function Home() {
       <main className="max-w-6xl mx-auto">
         <div className="space-y-6">
           {/* Header and Save Button */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="sticky top-0 z-10 bg-black flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4">
             <div>
               <h1 className="text-3xl font-bold text-white">
                 JSON Routes Config Editor
@@ -124,31 +111,14 @@ export default function Home() {
                 Manage and edit your routes configuration
               </p>
             </div>
-            <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-              <AlertDialogTrigger asChild>
-                <Button
-                  type="button"
-                  disabled={saving}
-                  className="w-full sm:w-auto"
-                >
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Save</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to save these changes? This will overwrite the current routes configuration.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={saving}>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleSave} disabled={saving}>
-                    {saving ? 'Saving...' : 'Confirm Save'}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <Button
+              type="button"
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full sm:w-auto"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </Button>
           </div>
 
           {/* Status Messages */}
